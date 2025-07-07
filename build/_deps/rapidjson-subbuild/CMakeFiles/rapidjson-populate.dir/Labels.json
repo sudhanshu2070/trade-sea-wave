@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/root/my_pistache_api/build/_deps/rapidjson-subbuild/CMakeFiles/rapidjson-populate"
+		},
+		{
+			"file" : "/root/my_pistache_api/build/_deps/rapidjson-subbuild/CMakeFiles/rapidjson-populate.rule"
+		},
+		{
+			"file" : "/root/my_pistache_api/build/_deps/rapidjson-subbuild/CMakeFiles/rapidjson-populate-complete.rule"
+		},
+		{
+			"file" : "/root/my_pistache_api/build/_deps/rapidjson-subbuild/rapidjson-populate-prefix/src/rapidjson-populate-stamp/rapidjson-populate-build.rule"
+		},
+		{
+			"file" : "/root/my_pistache_api/build/_deps/rapidjson-subbuild/rapidjson-populate-prefix/src/rapidjson-populate-stamp/rapidjson-populate-configure.rule"
+		},
+		{
+			"file" : "/root/my_pistache_api/build/_deps/rapidjson-subbuild/rapidjson-populate-prefix/src/rapidjson-populate-stamp/rapidjson-populate-download.rule"
+		},
+		{
+			"file" : "/root/my_pistache_api/build/_deps/rapidjson-subbuild/rapidjson-populate-prefix/src/rapidjson-populate-stamp/rapidjson-populate-install.rule"
+		},
+		{
+			"file" : "/root/my_pistache_api/build/_deps/rapidjson-subbuild/rapidjson-populate-prefix/src/rapidjson-populate-stamp/rapidjson-populate-mkdir.rule"
+		},
+		{
+			"file" : "/root/my_pistache_api/build/_deps/rapidjson-subbuild/rapidjson-populate-prefix/src/rapidjson-populate-stamp/rapidjson-populate-patch.rule"
+		},
+		{
+			"file" : "/root/my_pistache_api/build/_deps/rapidjson-subbuild/rapidjson-populate-prefix/src/rapidjson-populate-stamp/rapidjson-populate-test.rule"
+		},
+		{
+			"file" : "/root/my_pistache_api/build/_deps/rapidjson-subbuild/rapidjson-populate-prefix/src/rapidjson-populate-stamp/rapidjson-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"rapidjson-populate"
+		],
+		"name" : "rapidjson-populate"
+	}
+}
