@@ -87,7 +87,7 @@ rebuild_cache/fast: rebuild_cache
 
 # Special rule for the target list_install_components
 list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"dev\" \"doc\" \"examples\" \"pkgconfig\""
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\" \"dev\" \"doc\" \"examples\" \"pkgconfig\""
 .PHONY : list_install_components
 
 # Special rule for the target list_install_components
@@ -175,6 +175,71 @@ my_pistache_api/fast:
 .PHONY : my_pistache_api/fast
 
 #=============================================================================
+# Target rules for targets named zlib
+
+# Build rule for target.
+zlib: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zlib
+.PHONY : zlib
+
+# fast build rule for target.
+zlib/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/zlib-build/CMakeFiles/zlib.dir/build.make _deps/zlib-build/CMakeFiles/zlib.dir/build
+.PHONY : zlib/fast
+
+#=============================================================================
+# Target rules for targets named curl_uninstall
+
+# Build rule for target.
+curl_uninstall: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 curl_uninstall
+.PHONY : curl_uninstall
+
+# fast build rule for target.
+curl_uninstall/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/curl-build/CMakeFiles/curl_uninstall.dir/build.make _deps/curl-build/CMakeFiles/curl_uninstall.dir/build
+.PHONY : curl_uninstall/fast
+
+#=============================================================================
+# Target rules for targets named curlu
+
+# Build rule for target.
+curlu: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 curlu
+.PHONY : curlu
+
+# fast build rule for target.
+curlu/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/curl-build/lib/CMakeFiles/curlu.dir/build.make _deps/curl-build/lib/CMakeFiles/curlu.dir/build
+.PHONY : curlu/fast
+
+#=============================================================================
+# Target rules for targets named libcurl_shared
+
+# Build rule for target.
+libcurl_shared: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 libcurl_shared
+.PHONY : libcurl_shared
+
+# fast build rule for target.
+libcurl_shared/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/curl-build/lib/CMakeFiles/libcurl_shared.dir/build.make _deps/curl-build/lib/CMakeFiles/libcurl_shared.dir/build
+.PHONY : libcurl_shared/fast
+
+#=============================================================================
+# Target rules for targets named cpr
+
+# Build rule for target.
+cpr: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 cpr
+.PHONY : cpr
+
+# fast build rule for target.
+cpr/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/cpr-build/cpr/CMakeFiles/cpr.dir/build.make _deps/cpr-build/cpr/CMakeFiles/cpr.dir/build
+.PHONY : cpr/fast
+
+#=============================================================================
 # Target rules for targets named format
 
 # Build rule for target.
@@ -239,29 +304,77 @@ travis_doc/fast:
 	$(MAKE) $(MAKESILENT) -f _deps/rapidjson-build/CMakeFiles/travis_doc.dir/build.make _deps/rapidjson-build/CMakeFiles/travis_doc.dir/build
 .PHONY : travis_doc/fast
 
-src/controllers/auth_controller.o: src/controllers/auth_controller.cpp.o
-.PHONY : src/controllers/auth_controller.o
+src/controllers/DeltaController.o: src/controllers/DeltaController.cpp.o
+.PHONY : src/controllers/DeltaController.o
 
 # target to build an object file
-src/controllers/auth_controller.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.o
-.PHONY : src/controllers/auth_controller.cpp.o
+src/controllers/DeltaController.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.o
+.PHONY : src/controllers/DeltaController.cpp.o
 
-src/controllers/auth_controller.i: src/controllers/auth_controller.cpp.i
-.PHONY : src/controllers/auth_controller.i
+src/controllers/DeltaController.i: src/controllers/DeltaController.cpp.i
+.PHONY : src/controllers/DeltaController.i
 
 # target to preprocess a source file
-src/controllers/auth_controller.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.i
-.PHONY : src/controllers/auth_controller.cpp.i
+src/controllers/DeltaController.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.i
+.PHONY : src/controllers/DeltaController.cpp.i
 
-src/controllers/auth_controller.s: src/controllers/auth_controller.cpp.s
-.PHONY : src/controllers/auth_controller.s
+src/controllers/DeltaController.s: src/controllers/DeltaController.cpp.s
+.PHONY : src/controllers/DeltaController.s
 
 # target to generate assembly for a file
-src/controllers/auth_controller.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.s
-.PHONY : src/controllers/auth_controller.cpp.s
+src/controllers/DeltaController.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.s
+.PHONY : src/controllers/DeltaController.cpp.s
+
+src/controllers/backtest_controller.o: src/controllers/backtest_controller.cpp.o
+.PHONY : src/controllers/backtest_controller.o
+
+# target to build an object file
+src/controllers/backtest_controller.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.o
+.PHONY : src/controllers/backtest_controller.cpp.o
+
+src/controllers/backtest_controller.i: src/controllers/backtest_controller.cpp.i
+.PHONY : src/controllers/backtest_controller.i
+
+# target to preprocess a source file
+src/controllers/backtest_controller.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.i
+.PHONY : src/controllers/backtest_controller.cpp.i
+
+src/controllers/backtest_controller.s: src/controllers/backtest_controller.cpp.s
+.PHONY : src/controllers/backtest_controller.s
+
+# target to generate assembly for a file
+src/controllers/backtest_controller.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.s
+.PHONY : src/controllers/backtest_controller.cpp.s
+
+src/controllers/trading_controller.o: src/controllers/trading_controller.cpp.o
+.PHONY : src/controllers/trading_controller.o
+
+# target to build an object file
+src/controllers/trading_controller.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.o
+.PHONY : src/controllers/trading_controller.cpp.o
+
+src/controllers/trading_controller.i: src/controllers/trading_controller.cpp.i
+.PHONY : src/controllers/trading_controller.i
+
+# target to preprocess a source file
+src/controllers/trading_controller.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.i
+.PHONY : src/controllers/trading_controller.cpp.i
+
+src/controllers/trading_controller.s: src/controllers/trading_controller.cpp.s
+.PHONY : src/controllers/trading_controller.s
+
+# target to generate assembly for a file
+src/controllers/trading_controller.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.s
+.PHONY : src/controllers/trading_controller.cpp.s
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
@@ -287,29 +400,53 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
-src/services/auth_service.o: src/services/auth_service.cpp.o
-.PHONY : src/services/auth_service.o
+src/services/DeltaService.o: src/services/DeltaService.cpp.o
+.PHONY : src/services/DeltaService.o
 
 # target to build an object file
-src/services/auth_service.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.o
-.PHONY : src/services/auth_service.cpp.o
+src/services/DeltaService.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.o
+.PHONY : src/services/DeltaService.cpp.o
 
-src/services/auth_service.i: src/services/auth_service.cpp.i
-.PHONY : src/services/auth_service.i
+src/services/DeltaService.i: src/services/DeltaService.cpp.i
+.PHONY : src/services/DeltaService.i
 
 # target to preprocess a source file
-src/services/auth_service.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.i
-.PHONY : src/services/auth_service.cpp.i
+src/services/DeltaService.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.i
+.PHONY : src/services/DeltaService.cpp.i
 
-src/services/auth_service.s: src/services/auth_service.cpp.s
-.PHONY : src/services/auth_service.s
+src/services/DeltaService.s: src/services/DeltaService.cpp.s
+.PHONY : src/services/DeltaService.s
 
 # target to generate assembly for a file
-src/services/auth_service.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.s
-.PHONY : src/services/auth_service.cpp.s
+src/services/DeltaService.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.s
+.PHONY : src/services/DeltaService.cpp.s
+
+src/trading_controller.o: src/trading_controller.cpp.o
+.PHONY : src/trading_controller.o
+
+# target to build an object file
+src/trading_controller.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.o
+.PHONY : src/trading_controller.cpp.o
+
+src/trading_controller.i: src/trading_controller.cpp.i
+.PHONY : src/trading_controller.i
+
+# target to preprocess a source file
+src/trading_controller.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.i
+.PHONY : src/trading_controller.cpp.i
+
+src/trading_controller.s: src/trading_controller.cpp.s
+.PHONY : src/trading_controller.s
+
+# target to generate assembly for a file
+src/trading_controller.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/my_pistache_api.dir/build.make CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.s
+.PHONY : src/trading_controller.cpp.s
 
 # Help Target
 help:
@@ -323,21 +460,35 @@ help:
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
+	@echo "... curl_uninstall"
 	@echo "... format"
 	@echo "... travis_doc"
+	@echo "... cpr"
+	@echo "... curlu"
+	@echo "... libcurl_shared"
 	@echo "... my_pistache_api"
 	@echo "... pistache"
 	@echo "... pistache_shared"
 	@echo "... pistache_static"
-	@echo "... src/controllers/auth_controller.o"
-	@echo "... src/controllers/auth_controller.i"
-	@echo "... src/controllers/auth_controller.s"
+	@echo "... zlib"
+	@echo "... src/controllers/DeltaController.o"
+	@echo "... src/controllers/DeltaController.i"
+	@echo "... src/controllers/DeltaController.s"
+	@echo "... src/controllers/backtest_controller.o"
+	@echo "... src/controllers/backtest_controller.i"
+	@echo "... src/controllers/backtest_controller.s"
+	@echo "... src/controllers/trading_controller.o"
+	@echo "... src/controllers/trading_controller.i"
+	@echo "... src/controllers/trading_controller.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
-	@echo "... src/services/auth_service.o"
-	@echo "... src/services/auth_service.i"
-	@echo "... src/services/auth_service.s"
+	@echo "... src/services/DeltaService.o"
+	@echo "... src/services/DeltaService.i"
+	@echo "... src/services/DeltaService.s"
+	@echo "... src/trading_controller.o"
+	@echo "... src/trading_controller.i"
+	@echo "... src/trading_controller.s"
 .PHONY : help
 
 

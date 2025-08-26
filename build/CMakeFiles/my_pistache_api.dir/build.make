@@ -69,10 +69,52 @@ include CMakeFiles/my_pistache_api.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/my_pistache_api.dir/flags.make
 
+CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.o: CMakeFiles/my_pistache_api.dir/flags.make
+CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.o: ../src/controllers/DeltaController.cpp
+CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.o: CMakeFiles/my_pistache_api.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/my_pistache_api/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.o -MF CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.o.d -o CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.o -c /root/my_pistache_api/src/controllers/DeltaController.cpp
+
+CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /root/my_pistache_api/src/controllers/DeltaController.cpp > CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.i
+
+CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /root/my_pistache_api/src/controllers/DeltaController.cpp -o CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.s
+
+CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.o: CMakeFiles/my_pistache_api.dir/flags.make
+CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.o: ../src/controllers/backtest_controller.cpp
+CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.o: CMakeFiles/my_pistache_api.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/my_pistache_api/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.o -MF CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.o.d -o CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.o -c /root/my_pistache_api/src/controllers/backtest_controller.cpp
+
+CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /root/my_pistache_api/src/controllers/backtest_controller.cpp > CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.i
+
+CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /root/my_pistache_api/src/controllers/backtest_controller.cpp -o CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.s
+
+CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.o: CMakeFiles/my_pistache_api.dir/flags.make
+CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.o: ../src/controllers/trading_controller.cpp
+CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.o: CMakeFiles/my_pistache_api.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/my_pistache_api/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.o -MF CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.o.d -o CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.o -c /root/my_pistache_api/src/controllers/trading_controller.cpp
+
+CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /root/my_pistache_api/src/controllers/trading_controller.cpp > CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.i
+
+CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /root/my_pistache_api/src/controllers/trading_controller.cpp -o CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.s
+
 CMakeFiles/my_pistache_api.dir/src/main.cpp.o: CMakeFiles/my_pistache_api.dir/flags.make
 CMakeFiles/my_pistache_api.dir/src/main.cpp.o: ../src/main.cpp
 CMakeFiles/my_pistache_api.dir/src/main.cpp.o: CMakeFiles/my_pistache_api.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/my_pistache_api/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/my_pistache_api.dir/src/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/my_pistache_api/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/my_pistache_api.dir/src/main.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/my_pistache_api.dir/src/main.cpp.o -MF CMakeFiles/my_pistache_api.dir/src/main.cpp.o.d -o CMakeFiles/my_pistache_api.dir/src/main.cpp.o -c /root/my_pistache_api/src/main.cpp
 
 CMakeFiles/my_pistache_api.dir/src/main.cpp.i: cmake_force
@@ -83,39 +125,42 @@ CMakeFiles/my_pistache_api.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/my_pistache_api.dir/src/main.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /root/my_pistache_api/src/main.cpp -o CMakeFiles/my_pistache_api.dir/src/main.cpp.s
 
-CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.o: CMakeFiles/my_pistache_api.dir/flags.make
-CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.o: ../src/controllers/auth_controller.cpp
-CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.o: CMakeFiles/my_pistache_api.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/my_pistache_api/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.o -MF CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.o.d -o CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.o -c /root/my_pistache_api/src/controllers/auth_controller.cpp
+CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.o: CMakeFiles/my_pistache_api.dir/flags.make
+CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.o: ../src/services/DeltaService.cpp
+CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.o: CMakeFiles/my_pistache_api.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/my_pistache_api/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.o -MF CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.o.d -o CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.o -c /root/my_pistache_api/src/services/DeltaService.cpp
 
-CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /root/my_pistache_api/src/controllers/auth_controller.cpp > CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.i
+CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /root/my_pistache_api/src/services/DeltaService.cpp > CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.i
 
-CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /root/my_pistache_api/src/controllers/auth_controller.cpp -o CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.s
+CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /root/my_pistache_api/src/services/DeltaService.cpp -o CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.s
 
-CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.o: CMakeFiles/my_pistache_api.dir/flags.make
-CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.o: ../src/services/auth_service.cpp
-CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.o: CMakeFiles/my_pistache_api.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/my_pistache_api/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.o -MF CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.o.d -o CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.o -c /root/my_pistache_api/src/services/auth_service.cpp
+CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.o: CMakeFiles/my_pistache_api.dir/flags.make
+CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.o: ../src/trading_controller.cpp
+CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.o: CMakeFiles/my_pistache_api.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/my_pistache_api/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.o -MF CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.o.d -o CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.o -c /root/my_pistache_api/src/trading_controller.cpp
 
-CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /root/my_pistache_api/src/services/auth_service.cpp > CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.i
+CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /root/my_pistache_api/src/trading_controller.cpp > CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.i
 
-CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /root/my_pistache_api/src/services/auth_service.cpp -o CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.s
+CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /root/my_pistache_api/src/trading_controller.cpp -o CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.s
 
 # Object files for target my_pistache_api
 my_pistache_api_OBJECTS = \
+"CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.o" \
+"CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.o" \
+"CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.o" \
 "CMakeFiles/my_pistache_api.dir/src/main.cpp.o" \
-"CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.o" \
-"CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.o"
+"CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.o" \
+"CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.o"
 
 # External object files for target my_pistache_api
 my_pistache_api_EXTERNAL_OBJECTS = \
@@ -158,9 +203,12 @@ my_pistache_api_EXTERNAL_OBJECTS = \
 "/root/my_pistache_api/build/lib/pistache/src/CMakeFiles/pistache.dir/client/ssl_async.cc.o" \
 "/root/my_pistache_api/build/lib/pistache/src/CMakeFiles/pistache.dir/client/sslclient.cc.o"
 
+my_pistache_api: CMakeFiles/my_pistache_api.dir/src/controllers/DeltaController.cpp.o
+my_pistache_api: CMakeFiles/my_pistache_api.dir/src/controllers/backtest_controller.cpp.o
+my_pistache_api: CMakeFiles/my_pistache_api.dir/src/controllers/trading_controller.cpp.o
 my_pistache_api: CMakeFiles/my_pistache_api.dir/src/main.cpp.o
-my_pistache_api: CMakeFiles/my_pistache_api.dir/src/controllers/auth_controller.cpp.o
-my_pistache_api: CMakeFiles/my_pistache_api.dir/src/services/auth_service.cpp.o
+my_pistache_api: CMakeFiles/my_pistache_api.dir/src/services/DeltaService.cpp.o
+my_pistache_api: CMakeFiles/my_pistache_api.dir/src/trading_controller.cpp.o
 my_pistache_api: lib/pistache/src/CMakeFiles/pistache.dir/common/base64.cc.o
 my_pistache_api: lib/pistache/src/CMakeFiles/pistache.dir/common/cookie.cc.o
 my_pistache_api: lib/pistache/src/CMakeFiles/pistache.dir/common/description.cc.o
@@ -202,8 +250,10 @@ my_pistache_api: lib/pistache/src/CMakeFiles/pistache.dir/client/sslclient.cc.o
 my_pistache_api: CMakeFiles/my_pistache_api.dir/build.make
 my_pistache_api: /usr/lib/x86_64-linux-gnu/libssl.so
 my_pistache_api: /usr/lib/x86_64-linux-gnu/libcrypto.so
+my_pistache_api: _deps/cpr-build/cpr/libcpr.so.1.10.5
+my_pistache_api: _deps/curl-build/lib/libcurl.so.4.8.0
 my_pistache_api: CMakeFiles/my_pistache_api.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/root/my_pistache_api/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable my_pistache_api"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/root/my_pistache_api/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable my_pistache_api"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/my_pistache_api.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

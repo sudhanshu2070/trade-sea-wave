@@ -4,25 +4,44 @@ project(my_pistache_api)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Include directories
+include_directories(
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/src
+)
+
+# Fetch dependencies
+include(FetchContent)
+
+# Fetch CPR
+FetchContent_Declare(
+  cpr
+  GIT_REPOSITORY https://github.com/libcpr/cpr.git
+  GIT_TAG        1.10.5
+)
+FetchContent_MakeAvailable(cpr)
+
+# Fetch nlohmann_json
+FetchContent_Declare(
+  json
+  GIT_REPOSITORY https://github.com/nlohmann/json.git
+  GIT_TAG        v3.11.3
+)
+FetchContent_MakeAvailable(json)
+
 # Find OpenSSL
 find_package(OpenSSL REQUIRED)
-find_package(nlohmann_json 3.2.0 REQUIRED) 
 
-# Configure Pistache subproject to skip tests
+# Add Pistache subdirectory
 set(PISTACHE_BUILD_TESTS OFF CACHE BOOL "Disable tests")
 set(PISTACHE_INSTALL OFF CACHE BOOL "Disable installation")
-
-# Include Pistache
 add_subdirectory(lib/pistache EXCLUDE_FROM_ALL)
 
-# Include JWT-CPP
-include_directories(jwt-cpp/include)
-
-# Source files
-set(SOURCE_FILES
-    src/main.cpp
-    src/controllers/auth_controller.cpp
-    src/services/auth_service.cpp
+# Collect source files
+file(GLOB_RECURSE SOURCE_FILES
+    src/*.cpp
+    include/controllers/*.cpp
+    include/services/*.cpp
 )
 
 # Create executable
@@ -34,13 +53,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     OpenSSL::SSL
     OpenSSL::Crypto
     pthread
+    cpr::cpr
     nlohmann_json::nlohmann_json
-)
-
-# Include directories
-include_directories(
-    ${PROJECT_SOURCE_DIR}/src
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/lib/pistache/include
-    ${PROJECT_SOURCE_DIR}/jwt-cpp/include
 )

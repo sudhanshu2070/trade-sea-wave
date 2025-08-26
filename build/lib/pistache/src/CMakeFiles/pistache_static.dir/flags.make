@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -DONLY_C_LOCALE=1
 
-CXX_INCLUDES = 
+CXX_INCLUDES = -I/root/my_pistache_api/include -I/root/my_pistache_api/src
 
-CXX_FLAGS = -O2 -g -DNDEBUG -Wall -Wextra -Wpedantic -Wconversion -Wno-sign-conversion -Wno-missing-field-initializers -std=c++17
+CXX_FLAGS = -O3 -DNDEBUG -Wall -Wextra -Wpedantic -Wconversion -Wno-sign-conversion -Wno-missing-field-initializers -std=c++17
 

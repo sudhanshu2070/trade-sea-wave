@@ -1,24 +1,18 @@
-#include "controllers/auth_controller.hpp"
 #include <pistache/endpoint.h>
-#include <iostream>
+#include <pistache/router.h>
+#include "controllers/DeltaController.h"
 
 int main() {
     Pistache::Address addr(Pistache::Ipv4::any(), Pistache::Port(9080));
-    auto server = std::make_shared<Pistache::Http::Endpoint>(addr);
-    
+    auto opts = Pistache::Http::Endpoint::options().threads(1);
+    Pistache::Http::Endpoint server(addr);
+    server.init(opts);
+
     Pistache::Rest::Router router;
-    AuthController authController;
-    authController.setupRoutes(router);
-    
-    auto opts = Pistache::Http::Endpoint::options()
-        .threads(2)
-        .flags(Pistache::Tcp::Options::ReuseAddr);
-    
-    server->init(opts);
-    server->setHandler(router.handler());
-    
-    std::cout << "Server running on port 9080\n";
-    server->serve();
-    
+    DeltaController deltaController(router);
+
+    server.setHandler(router.handler());
+    server.serve();
+
     return 0;
 }
