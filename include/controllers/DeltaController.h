@@ -1,6 +1,6 @@
 #pragma once
 #include <pistache/router.h>
-#include "../services/DeltaService.h"
+#include "services/DeltaService.h"
 
 class DeltaController {
 public:
@@ -8,7 +8,12 @@ public:
 
 private:
     void setupRoutes();
-    void getMarkets(const Pistache::Rest::Request& request, Pistache::Http::ResponseWriter response);
+
+    // Existing
+    void getMarkets(const Pistache::Rest::Request&, Pistache::Http::ResponseWriter response);
+
+    // Add this declaration
+    void getOHLCV(const Pistache::Rest::Request& req, Pistache::Http::ResponseWriter response);
 
     Pistache::Rest::Router& router_;
     DeltaService deltaService_;

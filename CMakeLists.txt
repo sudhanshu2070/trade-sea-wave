@@ -1,19 +1,15 @@
-cmake_minimum_required(VERSION 3.12)
-project(my_pistache_api)
+cmake_minimum_required(VERSION 3.15)
+project(my_pistache_api LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Include directories
-include_directories(
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/src
-)
-
-# Fetch dependencies
+# -------------------------
+# Dependencies
+# -------------------------
 include(FetchContent)
 
-# Fetch CPR
+# CPR (HTTP Client)
 FetchContent_Declare(
   cpr
   GIT_REPOSITORY https://github.com/libcpr/cpr.git
@@ -21,7 +17,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(cpr)
 
-# Fetch nlohmann_json
+# nlohmann_json
 FetchContent_Declare(
   json
   GIT_REPOSITORY https://github.com/nlohmann/json.git
@@ -29,25 +25,37 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(json)
 
-# Find OpenSSL
+# OpenSSL
 find_package(OpenSSL REQUIRED)
 
-# Add Pistache subdirectory
-set(PISTACHE_BUILD_TESTS OFF CACHE BOOL "Disable tests")
-set(PISTACHE_INSTALL OFF CACHE BOOL "Disable installation")
-add_subdirectory(lib/pistache EXCLUDE_FROM_ALL)
+# Pistache (local submodule under lib/pistache)
+set(PISTACHE_BUILD_TESTS OFF CACHE BOOL "Disable Pistache tests")
+set(PISTACHE_INSTALL OFF CACHE BOOL "Disable Pistache install")
+# add_subdirectory(lib/pistache EXCLUDE_FROM_ALL)
 
-# Collect source files
+# -------------------------
+# Source files
+# -------------------------
 file(GLOB_RECURSE SOURCE_FILES
     src/*.cpp
     include/controllers/*.cpp
     include/services/*.cpp
 )
 
-# Create executable
+# -------------------------
+# Executable
+# -------------------------
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
-# Link libraries
+# Include paths (for headers in include/)
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/src
+)
+
+# -------------------------
+# Linking
+# -------------------------
 target_link_libraries(${PROJECT_NAME} PRIVATE
     pistache
     OpenSSL::SSL
