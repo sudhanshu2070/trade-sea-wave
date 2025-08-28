@@ -24,3 +24,6 @@ pistache_generated/
 # OS files
 .DS_Store
 Thumbs.db
+
+.env
+.env.local

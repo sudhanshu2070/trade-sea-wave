@@ -8,12 +8,12 @@ public:
 
 private:
     void setupRoutes();
-
-    // Existing
+    
+    // Handlers
     void getMarkets(const Pistache::Rest::Request&, Pistache::Http::ResponseWriter response);
-
-    // Add this declaration
     void getOHLCV(const Pistache::Rest::Request& req, Pistache::Http::ResponseWriter response);
+    void placeOrder(const Pistache::Rest::Request& req, Pistache::Http::ResponseWriter res);
+
 
     Pistache::Rest::Router& router_;
     DeltaService deltaService_;
