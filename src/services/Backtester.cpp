@@ -72,8 +72,26 @@ Backtester::Backtester(double initial_balance) {
 }
 
 void Backtester::run(std::vector<Candle>& candles) {
-    auto renkoBricks = buildRenko(candles, dynamicBoxSize(candles.back().close));
+    // auto renkoBricks = buildRenko(candles, dynamicBoxSize(candles.back().close));
+    auto renkoBricks = buildRenko(candles, 40.0); // Fixed box size for simplicity
+
+    // Log Renko bricks
+    std::cout << "Renko Bricks:\n";
+    for (const auto& brick : renkoBricks) {
+        std::cout << "Time: " << brick.time << ", Open: " << brick.open << ", Close: " << brick.close
+                  << ", High: " << brick.high << ", Low: " << brick.low << ", Volume: " << brick.volume << "\n";
+    }
+
     auto ichimokuData = calculateIchimoku(candles);
+
+    // Log Ichimoku data
+    std::cout << "Ichimoku Data:\n";
+    for (size_t i = 0; i < ichimokuData.base.size(); ++i) {
+        std::cout << "Index: " << i
+                  << ", Base: " << ichimokuData.base[i]
+                  << ", Lead1: " << ichimokuData.lead1[i]
+                  << ", Lead2: " << ichimokuData.lead2[i] << "\n";
+    }
 
     for (size_t i = 0; i < renkoBricks.size(); ++i) {
         auto renkoClose = renkoBricks[i].close;
@@ -91,7 +109,7 @@ void Backtester::run(std::vector<Candle>& candles) {
             } else if (renkoClose < base && renkoClose < lead1 && renkoClose < lead2) {
                 position = -1;
                 entryPrice = renkoClose;
-                trades.push_back({"SHORT", entryPrice, 0, 0, now, ""});
+                // trades.push_back({"SHORT", entryPrice, 0, 0, now, ""});
             }
         }
         // Exit
