@@ -1,4 +1,6 @@
 #include "services/BacktestService.h"
+#include "models/RenkoBuilder.h"
+#include "models/IchimokuCalculator.h"
 #include <nlohmann/json.hpp>
 #include <vector>
 #include <iostream>
@@ -61,9 +63,9 @@ BacktestResult BacktestService::run(const std::string& strategy,
         }
     }
 
-    if (candles.size() < 50) {
+    if (candles.size() < 52) {
         std::cerr << "Not enough candles for backtest (" 
-                  << candles.size() << " received)." << std::endl;
+                  << candles.size() << " received). Need at least 52." << std::endl;
         return result;
     }
 
@@ -145,39 +147,115 @@ void BacktestService::runSMA(const std::vector<Candle>& candles,
 void BacktestService::runRenkoIchimoku(std::vector<Candle>& candles, 
                                        BacktestResult& result,
                                        const std::string& symbol) {
-    Backtester bt(10000.0);
-    bt.run(candles);
-
-    std::vector<std::string> actions(candles.size(), "HOLD");
-    std::vector<double> cashHistory(candles.size(), 10000.0);
-    std::vector<double> posHistory(candles.size(), 0.0);
-    std::vector<double> pnlHistory(candles.size(), 0.0);
-
-    for (auto& t : bt.trades) {
-        for (size_t i = 0; i < candles.size(); i++) {
-            if (std::to_string(candles[i].time) == t.entry_time) actions[i] = t.type;
-            if (std::to_string(candles[i].time) == t.exit_time)  actions[i] = (t.type == "LONG") ? "SELL" : "BUY";
+    // Build Renko bricks
+    RenkoBuilder renkoBuilder(40.0);
+    std::vector<RenkoBrick> renkoBricks;
+    
+    for (const auto& candle : candles) {
+        auto brick = renkoBuilder.feed(candle.close, std::to_string(candle.time));
+        if (brick) {
+            renkoBricks.push_back(*brick);
         }
     }
-
-    // Fill cash/position/pnl history (simplified)
+    
+    // Compute Ichimoku
+    auto ichimokuData = IchimokuCalculator::compute_ichimoku_from_candles(candles);
+    
+    // Trading logic
     double cash = 10000.0;
     double position = 0.0;
+    double entryPrice = 0.0;
+    int positionDirection = 0;
+    
+    std::vector<std::string> actions(candles.size(), "HOLD");
+    std::vector<double> cashHistory(candles.size(), cash);
+    std::vector<double> posHistory(candles.size(), position);
+    std::vector<double> pnlHistory(candles.size(), 0.0);
+    
+    // Map Renko bricks to original candle timeline
+    size_t brickIndex = 0;
     for (size_t i = 0; i < candles.size(); i++) {
-        double price = candles[i].close;
+        if (brickIndex >= renkoBricks.size()) break;
+        
+        std::string candleTime = std::to_string(candles[i].time);
+        if (brickIndex < renkoBricks.size() && renkoBricks[brickIndex].ts == candleTime) {
+            auto renkoClose = renkoBricks[brickIndex].close;
+            
+            if (i < ichimokuData.base.size()) {
+                auto base = ichimokuData.base[i];
+                auto lead1 = ichimokuData.lead1_f[i];
+                auto lead2 = ichimokuData.lead2_f[i];
+                
+                if (!std::isnan(base) && !std::isnan(lead1) && !std::isnan(lead2)) {
+                    // Entry
+                    if (positionDirection == 0) {
+                        if (renkoClose > base && renkoClose > lead1 && renkoClose > lead2) {
+                            positionDirection = 1;
+                            position = cash / candles[i].close;
+                            entryPrice = candles[i].close;
+                            cash = 0;
+                            result.trades++;
+                            actions[i] = "LONG";
+                        } else if (renkoClose < base && renkoClose < lead1 && renkoClose < lead2) {
+                            positionDirection = -1;
+                            position = cash / candles[i].close;
+                            entryPrice = candles[i].close;
+                            cash = 0;
+                            result.trades++;
+                            actions[i] = "SHORT";
+                        }
+                    }
+                    // Exit
+                    else if (positionDirection == 1) {
+                        if (renkoClose < base || renkoClose < lead1) {
+                            cash = position * candles[i].close;
+                            result.pnl += cash - 10000.0;
+                            position = 0;
+                            positionDirection = 0;
+                            result.trades++;
+                            actions[i] = "SELL";
+                        }
+                    }
+                    else if (positionDirection == -1) {
+                        if (renkoClose > base || renkoClose > lead2) {
+                            cash = position * candles[i].close;
+                            result.pnl += cash - 10000.0;
+                            position = 0;
+                            positionDirection = 0;
+                            result.trades++;
+                            actions[i] = "COVER";
+                        }
+                    }
+                }
+            }
+            brickIndex++;
+        }
+        
+        // Update histories
         cashHistory[i] = cash;
-        posHistory[i] = position;
-        pnlHistory[i] = cash + position * price - 10000.0;
+        posHistory[i] = position * (positionDirection == -1 ? -1 : 1);
+        double currentValue = cash + position * candles[i].close;
+        pnlHistory[i] = currentValue - 10000.0;
     }
-
-    result.pnl = bt.balance - 10000.0;
-    result.trades = bt.trades.size();
-
+    
+    // Liquidate at the end
+    if (positionDirection != 0) {
+        double lastPrice = candles.back().close;
+        cash = position * lastPrice;
+        result.pnl += cash - 10000.0;
+        position = 0;
+        positionDirection = 0;
+        actions.back() = (positionDirection == 1) ? "SELL" : "COVER";
+        cashHistory.back() = cash;
+        posHistory.back() = position;
+        pnlHistory.back() = cash - 10000.0;
+    }
+    
     exportTradesToCSV(candles, actions, cashHistory, posHistory, pnlHistory, symbol, "backtest_results.csv");
 }
 
 // ----------------------
-// CSV Export with cash, position, PnL
+// CSV Export
 // ----------------------
 void BacktestService::exportTradesToCSV(const std::vector<Candle>& candles,
                                         const std::vector<std::string>& actions,
