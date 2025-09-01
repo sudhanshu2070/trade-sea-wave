@@ -1,13 +1,5 @@
 #include "models/RenkoBuilder.h"
-
-json RenkoBrick::to_json() const {
-    return {
-        {"open", open},
-        {"close", close},
-        {"dir", dir},
-        {"ts", ts}
-    };
-}
+#include <cmath>
 
 RenkoBuilder::RenkoBuilder(double box) : box_(box), last_close_(std::numeric_limits<double>::quiet_NaN()) {}
 

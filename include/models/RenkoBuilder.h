@@ -1,22 +1,9 @@
 #pragma once
+#include "RenkoBrick.h"
 #include <vector>
 #include <string>
 #include <optional>
 #include <limits>
-#include <deque>
-#include <cmath>
-#include <nlohmann/json.hpp>
-
-using json = nlohmann::json;
-
-struct RenkoBrick {
-    double open;
-    double close;
-    std::string dir;
-    std::string ts;
-    
-    json to_json() const;
-};
 
 class RenkoBuilder {
 public:
