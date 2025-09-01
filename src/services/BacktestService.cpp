@@ -142,7 +142,7 @@ void BacktestService::runSMA(const std::vector<Candle>& candles,
 }
 
 // ----------------------
-// Renko + Ichimoku Logic
+// Renko + Ichimoku Logic 
 // ----------------------
 void BacktestService::runRenkoIchimoku(std::vector<Candle>& candles, 
                                        BacktestResult& result,
@@ -178,71 +178,82 @@ void BacktestService::runRenkoIchimoku(std::vector<Candle>& candles,
         if (brickIndex >= renkoBricks.size()) break;
         
         std::string candleTime = std::to_string(candles[i].time);
+        double currentPrice = candles[i].close;
+        
+        // Check if this candle matches a Renko brick
+        bool hasRenkoSignal = false;
         if (brickIndex < renkoBricks.size() && renkoBricks[brickIndex].ts == candleTime) {
-            auto renkoClose = renkoBricks[brickIndex].close;
+            hasRenkoSignal = true;
+            brickIndex++;
+        }
+        
+        if (i < ichimokuData.base.size()) {
+            auto base = ichimokuData.base[i];
+            auto lead1 = ichimokuData.lead1_f[i];
+            auto lead2 = ichimokuData.lead2_f[i];
             
-            if (i < ichimokuData.base.size()) {
-                auto base = ichimokuData.base[i];
-                auto lead1 = ichimokuData.lead1_f[i];
-                auto lead2 = ichimokuData.lead2_f[i];
-                
-                if (!std::isnan(base) && !std::isnan(lead1) && !std::isnan(lead2)) {
-                    // Entry
-                    if (positionDirection == 0) {
-                        if (renkoClose > base && renkoClose > lead1 && renkoClose > lead2) {
-                            positionDirection = 1;
-                            position = cash / candles[i].close;
-                            entryPrice = candles[i].close;
-                            cash = 0;
-                            result.trades++;
-                            actions[i] = "LONG";
-                        } else if (renkoClose < base && renkoClose < lead1 && renkoClose < lead2) {
-                            positionDirection = -1;
-                            position = cash / candles[i].close;
-                            entryPrice = candles[i].close;
-                            cash = 0;
-                            result.trades++;
-                            actions[i] = "SHORT";
-                        }
+            if (!std::isnan(base) && !std::isnan(lead1) && !std::isnan(lead2) && hasRenkoSignal) {
+                // Entry
+                if (positionDirection == 0) {
+                    if (currentPrice > base && currentPrice > lead1 && currentPrice > lead2) {
+                        positionDirection = 1;
+                        position = cash / currentPrice;
+                        entryPrice = currentPrice;
+                        cash = 0;
+                        result.trades++;
+                        actions[i] = "LONG";
+                    } else if (currentPrice < base && currentPrice < lead1 && currentPrice < lead2) {
+                        positionDirection = -1;
+                        position = cash / currentPrice;
+                        entryPrice = currentPrice;
+                        cash = 0;
+                        result.trades++;
+                        actions[i] = "SHORT";
                     }
-                    // Exit
-                    else if (positionDirection == 1) {
-                        if (renkoClose < base || renkoClose < lead1) {
-                            cash = position * candles[i].close;
-                            result.pnl += cash - 10000.0;
-                            position = 0;
-                            positionDirection = 0;
-                            result.trades++;
-                            actions[i] = "SELL";
-                        }
+                }
+                // Exit
+                else if (positionDirection == 1) {
+                    if (currentPrice < base || currentPrice < lead1) {
+                        cash = position * currentPrice;
+                        double tradePnL = cash - 10000.0;
+                        result.pnl += tradePnL;
+                        position = 0;
+                        positionDirection = 0;
+                        result.trades++;
+                        actions[i] = "SELL";
                     }
-                    else if (positionDirection == -1) {
-                        if (renkoClose > base || renkoClose > lead2) {
-                            cash = position * candles[i].close;
-                            result.pnl += cash - 10000.0;
-                            position = 0;
-                            positionDirection = 0;
-                            result.trades++;
-                            actions[i] = "COVER";
-                        }
+                }
+                else if (positionDirection == -1) {
+                    if (currentPrice > base || currentPrice > lead2) {
+                        cash = -position * currentPrice; // Note: negative position
+                        double tradePnL = cash - 10000.0;
+                        result.pnl += tradePnL;
+                        position = 0;
+                        positionDirection = 0;
+                        result.trades++;
+                        actions[i] = "COVER";
                     }
                 }
             }
-            brickIndex++;
         }
         
         // Update histories
         cashHistory[i] = cash;
         posHistory[i] = position * (positionDirection == -1 ? -1 : 1);
-        double currentValue = cash + position * candles[i].close;
+        double currentValue = cash + position * currentPrice * (positionDirection == -1 ? -1 : 1);
         pnlHistory[i] = currentValue - 10000.0;
     }
     
     // Liquidate at the end
     if (positionDirection != 0) {
         double lastPrice = candles.back().close;
-        cash = position * lastPrice;
-        result.pnl += cash - 10000.0;
+        if (positionDirection == 1) {
+            cash = position * lastPrice;
+        } else {
+            cash = -position * lastPrice;
+        }
+        double tradePnL = cash - 10000.0;
+        result.pnl += tradePnL;
         position = 0;
         positionDirection = 0;
         actions.back() = (positionDirection == 1) ? "SELL" : "COVER";
@@ -255,7 +266,7 @@ void BacktestService::runRenkoIchimoku(std::vector<Candle>& candles,
 }
 
 // ----------------------
-// CSV Export
+// CSV Export (Only trade actions)
 // ----------------------
 void BacktestService::exportTradesToCSV(const std::vector<Candle>& candles,
                                         const std::vector<std::string>& actions,
@@ -269,6 +280,11 @@ void BacktestService::exportTradesToCSV(const std::vector<Candle>& candles,
     file << "Time(IST),Open,High,Low,Close,Volume,Action,Cash,Position,PnL\n";
 
     for (size_t i = 0; i < candles.size() && i < actions.size(); i++) {
+        // Only export rows with trade actions (skip HOLD)
+        if (actions[i] == "HOLD") {
+            continue;
+        }
+
         std::time_t t = candles[i].time + 5*3600 + 30*60;
         std::tm* istTime = std::gmtime(&t);
 
