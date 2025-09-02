@@ -90,14 +90,14 @@ endif()
 # -------------------------
 # Alternatively, disable sanitizers globally if still having issues
 # -------------------------
-# option(USE_SANITIZERS "Enable address, leak, and undefined behavior sanitizers" OFF)
-# if(NOT USE_SANITIZERS)
-#     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-#         add_compile_options(-fno-sanitize=address -fno-sanitize=leak -fno-sanitize=undefined -fno-sanitize=thread)
-#         add_link_options(-fno-sanitize=address -fno-sanitize=leak -fno-sanitize=undefined -fno-sanitize=thread)
-#     endif()
-#     message(STATUS "Sanitizers disabled globally")
-# endif()
+option(USE_SANITIZERS "Enable address, leak, and undefined behavior sanitizers" OFF)
+if(NOT USE_SANITIZERS)
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        add_compile_options(-fno-sanitize=address -fno-sanitize=leak -fno-sanitize=undefined -fno-sanitize=thread)
+        add_link_options(-fno-sanitize=address -fno-sanitize=leak -fno-sanitize=undefined -fno-sanitize=thread)
+    endif()
+    message(STATUS "Sanitizers disabled globally")
+endif()
 
 # -------------------------
 # Linking
