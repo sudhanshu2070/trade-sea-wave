@@ -189,11 +189,15 @@ void BacktestService::runRenkoIchimoku(std::vector<Candle>& candles,
         double lead2 = ichimokuData.lead2_f[i];
         
         // Check if this candle has a Renko signal (simplified check)
+        // Add after renkoBricks creation:
+        size_t renkoIndex = 0;
+
+        // In the candle loop, replace the Renko signal check:
         bool hasRenkoSignal = false;
-        for (const auto& brick : renkoBricks) {
-            if (brick.ts == std::to_string(candles[i].time)) {
+        if (renkoIndex < renkoBricks.size()) {
+            if (renkoBricks[renkoIndex].ts == std::to_string(candles[i].time)) {
                 hasRenkoSignal = true;
-                break;
+                renkoIndex++;  // CRITICAL: Move to next brick
             }
         }
         
