@@ -303,51 +303,22 @@ void BacktestService::exportTradesToCSV(const std::vector<Candle>& candles,
                                         const std::vector<double>& cashHistory,
                                         const std::vector<double>& posHistory,
                                         const std::vector<double>& pnlHistory,
-                                        const std::vector<RenkoBrick>& renkoBricks,
-                                        const IchimokuSeries& ichimokuData,
                                         const std::string& symbol,
                                         const std::string& filename) 
 {
     std::ofstream file(filename);
-    file << "Time(IST),Open,High,Low,Close,Volume,Action,Cash,Position,PnL,"
-         << "Renko_Open,Renko_Close,Renko_Direction,"
-         << "Ichimoku_Base,Ichimoku_Lead1,Ichimoku_Lead2\n";
+    file << "Time(IST),Open,High,Low,Close,Volume,Action,Cash,Position,PnL\n";
 
-    // Create Renko brick map for quick lookup
-    std::unordered_map<std::string, RenkoBrick> renkoMap;
-    for (const auto& brick : renkoBricks) {
-        renkoMap[brick.ts] = brick;
-    }
-
-    for (size_t i = 0; i < candles.size(); i++) {
-        std::string candleTime = std::to_string(candles[i].time);
-        
-        // Get Renko data
-        std::string renkoOpen = "N/A", renkoClose = "N/A", renkoDir = "N/A";
-        if (renkoMap.find(candleTime) != renkoMap.end()) {
-            const auto& brick = renkoMap[candleTime];
-            renkoOpen = std::to_string(brick.open);
-            renkoClose = std::to_string(brick.close);
-            renkoDir = (brick.trend == Trend::UP) ? "UP" : "DOWN";
+    for (size_t i = 0; i < candles.size() && i < actions.size(); i++) {
+        if (actions[i] == "HOLD") {
+            continue;
         }
 
-        // Get Ichimoku data
-        std::string ichimokuBase = "N/A", ichimokuLead1 = "N/A", ichimokuLead2 = "N/A";
-        if (i < ichimokuData.base.size() && !std::isnan(ichimokuData.base[i])) {
-            ichimokuBase = std::to_string(ichimokuData.base[i]);
-            ichimokuLead1 = std::to_string(ichimokuData.lead1_f[i]);
-            ichimokuLead2 = std::to_string(ichimokuData.lead2_f[i]);
-        }
-
-        // Convert to IST
-        std::time_t t = candles[i].time;
-        std::tm* utcTime = std::gmtime(&t);
-        utcTime->tm_hour += 5;
-        utcTime->tm_min += 30;
-        std::mktime(utcTime);
+        std::time_t t = candles[i].time + 5*3600 + 30*60;
+        std::tm* istTime = std::gmtime(&t);
 
         char buf[32];
-        std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", utcTime);
+        std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", istTime);
 
         file << buf << ","
              << candles[i].open << ","
@@ -358,15 +329,9 @@ void BacktestService::exportTradesToCSV(const std::vector<Candle>& candles,
              << actions[i] << ","
              << cashHistory[i] << ","
              << posHistory[i] << ","
-             << pnlHistory[i] << ","
-             << renkoOpen << ","
-             << renkoClose << ","
-             << renkoDir << ","
-             << ichimokuBase << ","
-             << ichimokuLead1 << ","
-             << ichimokuLead2 << "\n";
+             << pnlHistory[i] << "\n";
     }
 
     file.close();
-    std::cout << "Detailed backtest data exported to " << filename << std::endl;
+    std::cout << "Backtest trades exported to " << filename << std::endl;
 }

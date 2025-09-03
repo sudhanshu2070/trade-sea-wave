@@ -28,11 +28,11 @@ void Backtester::run(std::vector<Candle>& candles) {
         }
     }
     
-    // Log Renko bricks
+    // Log Renko bricks - FIXED: use dir() method
     std::cout << "Renko Bricks:\n";
     for (const auto& brick : renkoBricks) {
         std::cout << "Time: " << brick.ts << ", Open: " << brick.open 
-                  << ", Close: " << brick.close << ", Direction: " << brick.dir << "\n";
+                  << ", Close: " << brick.close << ", Direction: " << brick.dir() << "\n";
     }
     
     // Compute Ichimoku

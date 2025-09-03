@@ -12,16 +12,7 @@ struct RenkoBrick {
     Trend trend;
     std::string ts;
     
-    json to_json() const {
-        return {
-            {"open", open},
-            {"close", close},
-            {"trend", (trend == Trend::UP) ? "UP" : (trend == Trend::DOWN) ? "DOWN" : "NONE"},
-            {"ts", ts}
-        };
-    }
+    json to_json() const;
     
-    std::string dir() const {
-        return (trend == Trend::UP) ? "UP" : (trend == Trend::DOWN) ? "DOWN" : "NONE";
-    }
+    std::string dir() const;
 };
