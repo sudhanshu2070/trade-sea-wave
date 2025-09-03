@@ -141,13 +141,10 @@ void BacktestService::runSMA(const std::vector<Candle>& candles,
     exportTradesToCSV(candles, actions, cashHistory, posHistory, pnlHistory, symbol, "backtest_results.csv");
 }
 
-// ----------------------
-// Renko + Ichimoku Logic (COMPLETELY REWRITTEN)
-// ----------------------
 void BacktestService::runRenkoIchimoku(std::vector<Candle>& candles, 
                                        BacktestResult& result,
                                        const std::string& symbol) {
-    // Build Renko bricks
+    // Build Renko bricks using improved builder
     RenkoBuilder renkoBuilder(40.0);
     std::vector<RenkoBrick> renkoBricks;
     
@@ -155,15 +152,21 @@ void BacktestService::runRenkoIchimoku(std::vector<Candle>& candles,
         auto brick = renkoBuilder.feed(candle.close, std::to_string(candle.time));
         if (brick) {
             renkoBricks.push_back(*brick);
+            // Debug output for Renko bricks
+            std::cout << "RENKO BRICK: " << brick->ts 
+                      << " " << brick->dir()
+                      << " " << brick->open 
+                      << " -> " << brick->close 
+                      << std::endl;
         }
     }
     
     // Compute Ichimoku
     auto ichimokuData = IchimokuCalculator::compute_ichimoku_from_candles(candles);
     
-    // Trading logic - SIMPLIFIED AND CORRECTED
+    // Trading logic
     double cash = 10000.0;
-    double positionShares = 0.0;  // Number of shares/contracts (positive for long, negative for short)
+    double positionShares = 0.0;
     double entryPrice = 0.0;
     bool inPosition = false;
     
@@ -172,9 +175,12 @@ void BacktestService::runRenkoIchimoku(std::vector<Candle>& candles,
     std::vector<double> posHistory(candles.size(), positionShares);
     std::vector<double> pnlHistory(candles.size(), 0.0);
     
-    // Process each candle
+    // Process Renko bricks sequentially
+    size_t renkoIndex = 0;
+    
     for (size_t i = 0; i < candles.size(); i++) {
         double currentPrice = candles[i].close;
+        std::string currentTime = std::to_string(candles[i].time);
         
         // Skip if Ichimoku data not available
         if (i >= ichimokuData.base.size() || 
@@ -188,16 +194,17 @@ void BacktestService::runRenkoIchimoku(std::vector<Candle>& candles,
         double lead1 = ichimokuData.lead1_f[i];
         double lead2 = ichimokuData.lead2_f[i];
         
-        // Check if this candle has a Renko signal (simplified check)
-        // Add after renkoBricks creation:
-        size_t renkoIndex = 0;
-
-        // In the candle loop, replace the Renko signal check:
+        // Check for Renko signal at this candle time
         bool hasRenkoSignal = false;
+        Trend renkoTrend = Trend::NONE;
+        double renkoClose = 0.0;
+        
         if (renkoIndex < renkoBricks.size()) {
-            if (renkoBricks[renkoIndex].ts == std::to_string(candles[i].time)) {
+            if (renkoBricks[renkoIndex].ts == currentTime) {
                 hasRenkoSignal = true;
-                renkoIndex++;  // CRITICAL: Move to next brick
+                renkoTrend = renkoBricks[renkoIndex].trend;
+                renkoClose = renkoBricks[renkoIndex].close;
+                renkoIndex++;
             }
         }
         
@@ -205,42 +212,48 @@ void BacktestService::runRenkoIchimoku(std::vector<Candle>& candles,
             continue;
         }
         
-        // ENTRY LOGIC
+        // ENTRY LOGIC - Use Renko trend direction
         if (!inPosition) {
-            // LONG ENTRY: Price above all Ichimoku components
-            if (currentPrice > base && currentPrice > lead1 && currentPrice > lead2) {
-                positionShares = cash / currentPrice;  // Buy with all cash
+            // LONG ENTRY: Renko UP trend and price above Ichimoku components
+            if (renkoTrend == Trend::UP && currentPrice > base && currentPrice > lead1 && currentPrice > lead2) {
+                positionShares = cash / currentPrice;
                 entryPrice = currentPrice;
                 cash = 0;
                 inPosition = true;
                 result.trades++;
                 actions[i] = "LONG";
+                std::cout << "LONG ENTRY: " << currentPrice << " at " << currentTime << std::endl;
             }
-            // SHORT ENTRY: Price below all Ichimoku components  
-            else if (currentPrice < base && currentPrice < lead1 && currentPrice < lead2) {
-                positionShares = -cash / currentPrice;  // Short with all cash (negative shares)
+            // SHORT ENTRY: Renko DOWN trend and price below Ichimoku components  
+            else if (renkoTrend == Trend::DOWN && currentPrice < base && currentPrice < lead1 && currentPrice < lead2) {
+                positionShares = -cash / currentPrice;
                 entryPrice = currentPrice;
                 cash = 0;
                 inPosition = true;
                 result.trades++;
                 actions[i] = "SHORT";
+                std::cout << "SHORT ENTRY: " << currentPrice << " at " << currentTime << std::endl;
             }
         }
         // EXIT LOGIC
         else if (inPosition) {
             bool shouldExit = false;
             
-            // LONG EXIT: Price falls below base or lead1
-            if (positionShares > 0 && (currentPrice < base || currentPrice < lead1)) {
+            // LONG EXIT: Price falls below base or lead1, OR Renko trend reverses
+            if (positionShares > 0 && 
+                (currentPrice < base || currentPrice < lead1 || renkoTrend == Trend::DOWN)) {
                 cash = positionShares * currentPrice;
                 shouldExit = true;
                 actions[i] = "SELL";
+                std::cout << "LONG EXIT: " << currentPrice << " at " << currentTime << std::endl;
             }
-            // SHORT EXIT: Price rises above base or lead2
-            else if (positionShares < 0 && (currentPrice > base || currentPrice > lead2)) {
-                cash = -positionShares * currentPrice;  // Note: positionShares is negative
+            // SHORT EXIT: Price rises above base or lead2, OR Renko trend reverses
+            else if (positionShares < 0 && 
+                     (currentPrice > base || currentPrice > lead2 || renkoTrend == Trend::UP)) {
+                cash = -positionShares * currentPrice;
                 shouldExit = true;
                 actions[i] = "COVER";
+                std::cout << "SHORT EXIT: " << currentPrice << " at " << currentTime << std::endl;
             }
             
             if (shouldExit) {
@@ -248,20 +261,11 @@ void BacktestService::runRenkoIchimoku(std::vector<Candle>& candles,
                 result.pnl += tradePnL;
                 positionShares = 0;
                 inPosition = false;
-                result.trades++;
             }
         }
         
         // Update portfolio values
-        double positionValue;
-        if (positionShares > 0) {
-            positionValue = positionShares * currentPrice;  // Long position value
-        } else if (positionShares < 0) {
-            positionValue = positionShares * currentPrice;  // Short position value (negative)
-        } else {
-            positionValue = 0;
-        }
-        
+        double positionValue = positionShares * currentPrice;
         double totalValue = cash + positionValue;
         
         cashHistory[i] = cash;
@@ -281,42 +285,69 @@ void BacktestService::runRenkoIchimoku(std::vector<Candle>& candles,
         }
         double tradePnL = cash - 10000.0;
         result.pnl += tradePnL;
-        positionShares = 0;
-        inPosition = false;
         
         cashHistory.back() = cash;
-        posHistory.back() = positionShares;
+        posHistory.back() = 0;
         pnlHistory.back() = cash - 10000.0;
     }
     
-    exportTradesToCSV(candles, actions, cashHistory, posHistory, pnlHistory, symbol, "backtest_results.csv");
+    // Enhanced CSV export with Renko data
+    exportTradesToCSV(candles, actions, cashHistory, posHistory, pnlHistory, renkoBricks, ichimokuData, symbol, "backtest_detailed.csv");
 }
 
-// ----------------------
+// ----------------------------------------------
 // CSV Export (Only trade actions)
-// ----------------------
+// ----------------------------------------------
 void BacktestService::exportTradesToCSV(const std::vector<Candle>& candles,
                                         const std::vector<std::string>& actions,
                                         const std::vector<double>& cashHistory,
                                         const std::vector<double>& posHistory,
                                         const std::vector<double>& pnlHistory,
+                                        const std::vector<RenkoBrick>& renkoBricks,
+                                        const IchimokuSeries& ichimokuData,
                                         const std::string& symbol,
                                         const std::string& filename) 
 {
     std::ofstream file(filename);
-    file << "Time(IST),Open,High,Low,Close,Volume,Action,Cash,Position,PnL\n";
+    file << "Time(IST),Open,High,Low,Close,Volume,Action,Cash,Position,PnL,"
+         << "Renko_Open,Renko_Close,Renko_Direction,"
+         << "Ichimoku_Base,Ichimoku_Lead1,Ichimoku_Lead2\n";
 
-    for (size_t i = 0; i < candles.size() && i < actions.size(); i++) {
-        // Only export rows with trade actions (skip HOLD)
-        if (actions[i] == "HOLD") {
-            continue;
+    // Create Renko brick map for quick lookup
+    std::unordered_map<std::string, RenkoBrick> renkoMap;
+    for (const auto& brick : renkoBricks) {
+        renkoMap[brick.ts] = brick;
+    }
+
+    for (size_t i = 0; i < candles.size(); i++) {
+        std::string candleTime = std::to_string(candles[i].time);
+        
+        // Get Renko data
+        std::string renkoOpen = "N/A", renkoClose = "N/A", renkoDir = "N/A";
+        if (renkoMap.find(candleTime) != renkoMap.end()) {
+            const auto& brick = renkoMap[candleTime];
+            renkoOpen = std::to_string(brick.open);
+            renkoClose = std::to_string(brick.close);
+            renkoDir = (brick.trend == Trend::UP) ? "UP" : "DOWN";
         }
 
-        std::time_t t = candles[i].time + 5*3600 + 30*60;
-        std::tm* istTime = std::gmtime(&t);
+        // Get Ichimoku data
+        std::string ichimokuBase = "N/A", ichimokuLead1 = "N/A", ichimokuLead2 = "N/A";
+        if (i < ichimokuData.base.size() && !std::isnan(ichimokuData.base[i])) {
+            ichimokuBase = std::to_string(ichimokuData.base[i]);
+            ichimokuLead1 = std::to_string(ichimokuData.lead1_f[i]);
+            ichimokuLead2 = std::to_string(ichimokuData.lead2_f[i]);
+        }
+
+        // Convert to IST
+        std::time_t t = candles[i].time;
+        std::tm* utcTime = std::gmtime(&t);
+        utcTime->tm_hour += 5;
+        utcTime->tm_min += 30;
+        std::mktime(utcTime);
 
         char buf[32];
-        std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", istTime);
+        std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", utcTime);
 
         file << buf << ","
              << candles[i].open << ","
@@ -327,9 +358,15 @@ void BacktestService::exportTradesToCSV(const std::vector<Candle>& candles,
              << actions[i] << ","
              << cashHistory[i] << ","
              << posHistory[i] << ","
-             << pnlHistory[i] << "\n";
+             << pnlHistory[i] << ","
+             << renkoOpen << ","
+             << renkoClose << ","
+             << renkoDir << ","
+             << ichimokuBase << ","
+             << ichimokuLead1 << ","
+             << ichimokuLead2 << "\n";
     }
 
     file.close();
-    std::cout << "Backtest trades exported to " << filename << std::endl;
+    std::cout << "Detailed backtest data exported to " << filename << std::endl;
 }
