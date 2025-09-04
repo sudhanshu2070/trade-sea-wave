@@ -17,7 +17,7 @@ public:
     BacktestService(DeltaService& deltaService);
     BacktestResult run(const std::string& strategy, const std::string& symbol, long start, long end);
     
-    // Basic export for SMA
+    // For SMA strategy (7 parameters)
     void exportTradesToCSV(const std::vector<Candle>& candles,
                           const std::vector<std::string>& actions,
                           const std::vector<double>& cashHistory,
@@ -26,7 +26,7 @@ public:
                           const std::string& symbol,
                           const std::string& filename);
 
-    // Enhanced export for Renko+Ichimoku
+    // For Renko+Ichimoku strategy (9 parameters) - use different name
     void exportEnhancedTradesToCSV(const std::vector<Candle>& candles,
                                   const std::vector<std::string>& actions,
                                   const std::vector<double>& cashHistory,

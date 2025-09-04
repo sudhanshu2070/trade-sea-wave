@@ -1,12 +1,15 @@
 #include "services/BacktestService.h"
 #include "models/RenkoBuilder.h"
 #include "models/IchimokuCalculator.h"
+#include "utils/TimeUtils.h"
 #include <nlohmann/json.hpp>
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 #include <ctime>
+#include <sstream>
+#include <unordered_map>
 
 using json = nlohmann::json;
 
@@ -140,6 +143,9 @@ void BacktestService::runSMA(const std::vector<Candle>& candles,
     exportTradesToCSV(candles, actions, cashHistory, posHistory, pnlHistory, symbol, "backtest_results.csv");
 }
 
+// ----------------------
+// Renko + Ichimoku Logic
+// ----------------------
 void BacktestService::runRenkoIchimoku(std::vector<Candle>& candles, 
                                        BacktestResult& result,
                                        const std::string& symbol) {
@@ -294,10 +300,9 @@ void BacktestService::runRenkoIchimoku(std::vector<Candle>& candles,
     exportEnhancedTradesToCSV(candles, actions, cashHistory, posHistory, pnlHistory, renkoBricks, ichimokuData, symbol, "backtest_detailed.csv");
 }
 
-// ----------------------------------------------
-// CSV Export (Only trade actions)
-// ----------------------------------------------
-// Basic export for SMA
+// ----------------------
+// Basic CSV Export for SMA (7 parameters)
+// ----------------------
 void BacktestService::exportTradesToCSV(const std::vector<Candle>& candles,
                                         const std::vector<std::string>& actions,
                                         const std::vector<double>& cashHistory,
@@ -310,17 +315,15 @@ void BacktestService::exportTradesToCSV(const std::vector<Candle>& candles,
     file << "Time(IST),Open,High,Low,Close,Volume,Action,Cash,Position,PnL\n";
 
     for (size_t i = 0; i < candles.size(); i++) {
+        // Only export rows with trade actions (skip HOLD)
         if (actions[i] == "HOLD") {
             continue;
         }
 
-        std::time_t t = candles[i].time + 5*3600 + 30*60;
-        std::tm* istTime = std::gmtime(&t);
+        // Convert to IST using TimeUtils
+        std::string istTime = TimeUtils::convertToIST(candles[i].time);
 
-        char buf[32];
-        std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", istTime);
-
-        file << buf << ","
+        file << istTime << ","
              << candles[i].open << ","
              << candles[i].high << ","
              << candles[i].low << ","
@@ -336,7 +339,9 @@ void BacktestService::exportTradesToCSV(const std::vector<Candle>& candles,
     std::cout << "Backtest trades exported to " << filename << std::endl;
 }
 
-// Enhanced export for Renko+Ichimoku
+// ----------------------
+// Enhanced CSV Export for Renko+Ichimoku (9 parameters)
+// ----------------------
 void BacktestService::exportEnhancedTradesToCSV(const std::vector<Candle>& candles,
                                                const std::vector<std::string>& actions,
                                                const std::vector<double>& cashHistory,
@@ -352,19 +357,21 @@ void BacktestService::exportEnhancedTradesToCSV(const std::vector<Candle>& candl
          << "Renko_Open,Renko_Close,Renko_Direction,"
          << "Ichimoku_Base,Ichimoku_Lead1,Ichimoku_Lead2\n";
 
-    // Create Renko brick map for quick lookup
+    // Create a map of Renko bricks by IST timestamp for quick lookup
     std::unordered_map<std::string, RenkoBrick> renkoMap;
     for (const auto& brick : renkoBricks) {
         renkoMap[brick.ts] = brick;
     }
 
     for (size_t i = 0; i < candles.size(); i++) {
-        std::string candleTime = std::to_string(candles[i].time);
+        // Convert candle time to IST
+        std::string istTime = TimeUtils::convertToIST(candles[i].time);
         
-        // Get Renko data
+        // Get Renko data for this candle time
         std::string renkoOpen = "N/A", renkoClose = "N/A", renkoDir = "N/A";
-        if (renkoMap.find(candleTime) != renkoMap.end()) {
-            const auto& brick = renkoMap[candleTime];
+        
+        if (renkoMap.find(istTime) != renkoMap.end()) {
+            const auto& brick = renkoMap[istTime];
             renkoOpen = std::to_string(brick.open);
             renkoClose = std::to_string(brick.close);
             renkoDir = (brick.trend == Trend::UP) ? "UP" : "DOWN";
@@ -378,17 +385,7 @@ void BacktestService::exportEnhancedTradesToCSV(const std::vector<Candle>& candl
             ichimokuLead2 = std::to_string(ichimokuData.lead2_f[i]);
         }
 
-        // Convert to IST
-        std::time_t t = candles[i].time;
-        std::tm* utcTime = std::gmtime(&t);
-        utcTime->tm_hour += 5;
-        utcTime->tm_min += 30;
-        std::mktime(utcTime);
-
-        char buf[32];
-        std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", utcTime);
-
-        file << buf << ","
+        file << istTime << ","
              << candles[i].open << ","
              << candles[i].high << ","
              << candles[i].low << ","

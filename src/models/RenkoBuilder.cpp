@@ -1,5 +1,7 @@
 #include "models/RenkoBuilder.h"
+#include "utils/TimeUtils.h"
 #include <cmath>
+#include <stdexcept>
 
 RenkoBuilder::RenkoBuilder(double box) : box_(box), last_close_(std::numeric_limits<double>::quiet_NaN()), trend_(Trend::NONE) {}
 
@@ -11,18 +13,29 @@ std::optional<RenkoBrick> RenkoBuilder::feed(double price, const std::string &ts
         return std::nullopt; 
     }
 
+    // Convert the timestamp to IST if it's provided
+    std::string ist_ts = ts;
+    if (!ts.empty()) {
+        try {
+            ist_ts = TimeUtils::convertToIST(ts);
+        } catch (...) {
+            // If conversion fails, use original timestamp
+            ist_ts = ts;
+        }
+    }
+
     double movement = price - last_close_;
 
     if (trend_ == Trend::NONE) {
         if (std::abs(movement) >= box_) {
             int num = static_cast<int>(std::floor(std::abs(movement) / box_));
             trend_ = (movement > 0) ? Trend::UP : Trend::DOWN;
-            for (int j=0; j<num; j++) {
+            for (int j = 0; j < num; j++) {
                 RenkoBrick b;
                 b.open = last_close_;
                 b.close = (trend_ == Trend::UP) ? last_close_ + box_ : last_close_ - box_;
                 b.trend = trend_;
-                b.ts = ts;
+                b.ts = ist_ts;
                 bricks_.push_back(b);
                 last_close_ = b.close;
             }
@@ -31,28 +44,30 @@ std::optional<RenkoBrick> RenkoBuilder::feed(double price, const std::string &ts
     } 
     else if (trend_ == Trend::UP) {
         double cont = last_close_ + box_;
-        double rev  = last_close_ - 2 * box_;
+        double rev = last_close_ - 2 * box_;
+        
         if (price >= cont) {
             int num = static_cast<int>(std::floor((price - last_close_) / box_));
-            for (int j=0; j<num; j++) {
+            for (int j = 0; j < num; j++) {
                 RenkoBrick b;
                 b.open = last_close_;
                 b.close = last_close_ + box_;
                 b.trend = Trend::UP;
-                b.ts = ts;
+                b.ts = ist_ts;
                 bricks_.push_back(b);
                 last_close_ = b.close;
             }
             return bricks_.back();
-        } else if (price <= rev) {
+        } 
+        else if (price <= rev) {
             trend_ = Trend::DOWN;
             int num = static_cast<int>(std::floor((last_close_ - price) / box_)) - 1;
-            for (int j=0; j<num; j++) {
+            for (int j = 0; j < num; j++) {
                 RenkoBrick b;
                 b.open = last_close_;
                 b.close = last_close_ - box_;
                 b.trend = Trend::DOWN;
-                b.ts = ts;
+                b.ts = ist_ts;
                 bricks_.push_back(b);
                 last_close_ = b.close;
             }
@@ -61,46 +76,51 @@ std::optional<RenkoBrick> RenkoBuilder::feed(double price, const std::string &ts
     } 
     else if (trend_ == Trend::DOWN) {
         double cont = last_close_ - box_;
-        double rev  = last_close_ + 2 * box_;
+        double rev = last_close_ + 2 * box_;
+        
         if (price <= cont) {
             int num = static_cast<int>(std::floor((last_close_ - price) / box_));
-            for (int j=0; j<num; j++) {
+            for (int j = 0; j < num; j++) {
                 RenkoBrick b;
                 b.open = last_close_;
                 b.close = last_close_ - box_;
                 b.trend = Trend::DOWN;
-                b.ts = ts;
+                b.ts = ist_ts;
                 bricks_.push_back(b);
                 last_close_ = b.close;
             }
             return bricks_.back();
-        } else if (price >= rev) {
+        } 
+        else if (price >= rev) {
             trend_ = Trend::UP;
             int num = static_cast<int>(std::floor((price - last_close_) / box_)) - 1;
-            for (int j=0; j<num; j++) {
+            for (int j = 0; j < num; j++) {
                 RenkoBrick b;
                 b.open = last_close_;
                 b.close = last_close_ + box_;
                 b.trend = Trend::UP;
-                b.ts = ts;
+                b.ts = ist_ts;
                 bricks_.push_back(b);
                 last_close_ = b.close;
             }
             return bricks_.back();
         }
     }
+    
     return std::nullopt;
 }
 
 std::vector<RenkoBrick> RenkoBuilder::build_from_closes(const std::vector<double>& closes, double box) {
     RenkoBuilder rb(box);
-    for (size_t i=0; i<closes.size(); ++i) {
+    for (size_t i = 0; i < closes.size(); ++i) {
         rb.feed(closes[i]);
     }
     return rb.history();
 }
 
-const std::vector<RenkoBrick>& RenkoBuilder::history() const { return bricks_; }
+const std::vector<RenkoBrick>& RenkoBuilder::history() const { 
+    return bricks_; 
+}
 
 std::vector<json> RenkoBuilder::latest_json(size_t n) const {
     std::vector<json> out; 
